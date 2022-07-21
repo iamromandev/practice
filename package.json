@@ -1,0 +1,13 @@
+{
+    "name": "express_practice",
+    "version": "1.0.0",
+    "description": "Express on Docker",
+    "author": "Roman",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "express" : "^4.18.1"
+    }
+}

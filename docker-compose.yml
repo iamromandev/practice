@@ -1,0 +1,7 @@
+services:
+  practice-express:
+    container_name: practice-express
+    build: 
+      context: .
+    ports:
+      - '8000:8080' 

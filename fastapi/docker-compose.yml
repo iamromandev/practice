@@ -1,0 +1,7 @@
+services:
+  practice-fastapi:
+    container_name: practice-fastapi
+    build: 
+      context: .
+    ports:
+      - '8000:80' 

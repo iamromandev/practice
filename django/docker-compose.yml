@@ -1,26 +1,40 @@
 services:
   db:
     container_name: db
-    image: postgres
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
+    image: mariadb
+    restart: "always"
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db.django
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    ports:
+      - 3306:3306
+    volumes:
+      - ./data/db:/var/lib/mysql/data
+    command: ['mysqld', '--character-set-server=utf8', '--collation-server=utf8_unicode_ci']
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
   web:
     container_name: web
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/code
-    ports:
-      - "8000:8000"
+    command: poetry run python manage.py runserver 0.0.0.0:8000
     environment:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    depends_on:
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    links:
       - db
+    depends_on:
+      db:
+        condition: service_healthy
+
   

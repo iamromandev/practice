@@ -22,7 +22,10 @@ services:
   web:
     container_name: web
     build: .
-    command: poetry run python manage.py runserver 0.0.0.0:8000
+    command: >
+      bash -c "poetry run python manage.py makemigrations 
+      && poetry run python manage.py migrate 
+      && poetry run python manage.py runserver 0.0.0.0:8000"
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}

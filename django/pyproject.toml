@@ -8,6 +8,8 @@ authors = ["roman"]
 python = "^3.10"
 Django = "^4.0.6"
 mysqlclient = "^2.1.1"
+loguru = "^0.6.0"
+django-environ = "^0.9.0"
 
 [tool.poetry.dev-dependencies]
 

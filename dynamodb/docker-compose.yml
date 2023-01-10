@@ -1,0 +1,44 @@
+services:
+  db:
+    container_name: db
+    platform: linux/amd64
+    image: amazon/dynamodb-local
+    working_dir: /home/dynamodblocal
+    volumes:
+      - ./docker/dynamodb:/home/dynamodblocal/data
+    ports:
+      - 8000:8000
+    command: [ "-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "/home/dynamodblocal/data" ]
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8000/shell/ || exit 1" ]
+      interval: 1s
+      timeout: 10s
+      retries: 5
+      start_period: 1s
+
+  web:
+    container_name: web
+    #build:
+    #  context: .
+    #  dockerfile: Dockerfile
+    #  target: local
+    #  args:
+    #    ENV: local
+    platform: linux/amd64
+    image: banst/awscli
+    #command: uvicorn src.main:app --reload --host 0.0.0.0 --port 80
+    ports:
+      - 81:80
+    environment:
+      AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
+      AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
+    depends_on:
+      - db
+    links:
+      - db
+    command: dynamodb describe-limits --endpoint-url http://db:8000 --region us-west-2
+
+
+
+
+    
